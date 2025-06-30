@@ -21,6 +21,7 @@ use num_complex::Complex64;
 use std::collections::hash_map::DefaultHasher;
 use std::fmt;
 use std::hash::{Hash, Hasher};
+use std::sync::Arc;
 
 use pyo3::prelude::*;
 use pyo3::IntoPyObjectExt;
@@ -84,7 +85,7 @@ impl ParameterExpression {
             .replace("__end_sympy_replace__", "$");
 
         ParameterExpression {
-            expr: SymbolExpr::Symbol(Box::new(name)),
+            expr: SymbolExpr::Symbol(Arc::new(name)),
         }
     }
 
@@ -118,14 +119,6 @@ impl ParameterExpression {
             }),
             Err(s) => Err(pyo3::exceptions::PyRuntimeError::new_err(s)),
         }
-    }
-
-    // return string to pass to sympify
-    pub fn expr_for_sympy(&self) -> String {
-        // using altenate format for sympify
-        let ret = self.expr.optimize().sympify().to_string();
-        ret.replace("$\\", "__begin_sympy_replace__")
-            .replace('$', "__end_sympy_replace__")
     }
 
     // unary functions
