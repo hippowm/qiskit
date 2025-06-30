@@ -93,6 +93,8 @@ from qiskit.circuit.library.standard_gates.equivalence_library import (
     StandardEquivalenceLibrary as std_eqlib,
 )
 from test import QiskitTestCase  # pylint: disable=wrong-import-order
+from qiskit.transpiler.passes.synthesis.hls_plugins import MCXSynthesis2CleanKG24, MCXSynthesis2DirtyKG24, MCXSynthesis1CleanKG24, MCXSynthesis1DirtyKG24
+import unittest
 
 
 # In what follows, we create two simple operations OpA and OpB, that potentially mimic
@@ -2851,6 +2853,18 @@ class TestMCXSynthesisPlugins(QiskitTestCase):
         qc.append(MCXGate(3).inverse(annotated=True).control(2, annotated=True), [0, 1, 2, 3, 4, 5])
         qct = transpile(qc, qubits_initially_zero=False)
         self.assertEqual(Operator(qc), Operator(qct))
+
+    def test_run_with_invalid_input(self):
+            """Test 'run' method with invalid input type."""
+            invalid_gate = "not_a_gate"  # Invalid input
+            # Test case for MCXSynthesis2CleanKG24
+            self.assertIsNone(MCXSynthesis2CleanKG24().run(invalid_gate, num_clean_ancillas=2, num_dirty_ancillas=0))
+            # Test case for MCXSynthesis2DirtyKG24
+            self.assertIsNone(MCXSynthesis2DirtyKG24().run(invalid_gate, num_clean_ancillas=0, num_dirty_ancillas=2))
+            # Test case for MCXSynthesis1CleanKG24
+            self.assertIsNone(MCXSynthesis1CleanKG24().run(invalid_gate, num_clean_ancillas=1, num_dirty_ancillas=0))
+            # Test case for MCXSynthesis1DirtyKG24
+            self.assertIsNone(MCXSynthesis1DirtyKG24().run(invalid_gate, num_clean_ancillas=0, num_dirty_ancillas=1))
 
 
 @ddt
