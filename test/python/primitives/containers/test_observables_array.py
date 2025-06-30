@@ -19,6 +19,8 @@ import numpy as np
 import qiskit.quantum_info as qi
 from qiskit.primitives.containers.observables_array import ObservablesArray
 from test import QiskitTestCase  # pylint: disable=wrong-import-order
+import unittest
+from qiskit.primitives.containers.observables_array import ObservablesArray, SparseObservable
 
 
 @ddt.ddt
@@ -355,3 +357,8 @@ class ObservablesArrayTestCase(QiskitTestCase):
                             {labels_rs[idx]: 1},
                             msg=f"failed for shape {shape} with input format {input_shape}",
                         )
+
+    def test_invalid_basis_type_raises_type_error(self):
+            invalid_basis = {1: 'value', 2: 'another_value'}  # Invalid keys (integers)
+            with self.assertRaises(TypeError):
+                ObservablesArray.coerce_observable(invalid_basis)
