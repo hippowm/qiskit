@@ -46,6 +46,7 @@ from test import combine  # pylint: disable=wrong-import-order
 from test import QiskitTestCase  # pylint: disable=wrong-import-order
 
 from .test_pauli import pauli_group_labels
+from qiskit.quantum_info.operators.symplectic import PauliList
 
 
 def pauli_mat(label):
@@ -2179,6 +2180,17 @@ class TestPauliListMethods(QiskitTestCase):
                     for group1_pauli, group2_pauli in itertools.product(group1, group2)
                 )
             )
+
+    def test_from_symplectic_invalid_phase(self):
+            with self.assertRaises(ValueError):
+                PauliList.from_symplectic(np.array([[1, 0], [0, 1]]), np.array([0]), np.array([[1, 0], [0, 1]]))
+    def test_insert_single_column_length_one(self):
+            pauli = PauliList(['X'])
+            insert = PauliList(['Y'])
+            target = PauliList(['YX'])
+            value = pauli.insert(1, insert, qubit=True)
+            self.assertEqual(value, target)
+            self.assertEqual(value.phase.shape, (1,))
 
 
 if __name__ == "__main__":
