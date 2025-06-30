@@ -26,6 +26,9 @@ from qiskit.quantum_info.operators.measures import process_fidelity
 from qiskit.transpiler import PassManager, Target, generate_preset_pass_manager
 from qiskit.transpiler.passes import ConsolidateBlocks, Collect1qRuns, Collect2qBlocks
 from test import QiskitTestCase  # pylint: disable=wrong-import-order
+from qiskit import QuantumCircuit
+from qiskit.transpiler import generate_preset_pass_manager
+from qiskit.transpiler.passes import ConsolidateBlocks
 
 
 @ddt
@@ -586,6 +589,24 @@ class TestConsolidateBlocks(QiskitTestCase):
         ref_tqc = ref_pm.run(qc)
         pm = generate_preset_pass_manager(
             optimization_level=opt_level, basis_gates=["rz", "rzz", "sx", "x", "rx"]
+        )
+        tqc = pm.run(qc)
+        self.assertEqual(ref_tqc, tqc)
+
+    @data(2, 3)
+    def test_rzx_in_basis_gates(self, opt_level):
+        """Test correct initialization of ConsolidateBlocks pass when 'rzx' is included in basis_gates."""
+        qc = QuantumCircuit(2)
+        qc.cz(0, 1)
+        qc.sx([0, 1])
+        qc.cz(0, 1)
+
+        ref_pm = generate_preset_pass_manager(
+            optimization_level=1, basis_gates=["rz", "rzz", "rzx", "sx", "x", "rx"]
+        )
+        ref_tqc = ref_pm.run(qc)
+        pm = generate_preset_pass_manager(
+            optimization_level=opt_level, basis_gates=["rz", "rzz", "rzx", "sx", "x", "rx"]
         )
         tqc = pm.run(qc)
         self.assertEqual(ref_tqc, tqc)
