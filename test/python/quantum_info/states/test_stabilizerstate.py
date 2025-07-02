@@ -28,9 +28,7 @@ from qiskit.circuit.library import IGate, XGate, HGate
 from qiskit.quantum_info.operators import Clifford, Pauli, Operator, SparsePauliOp
 from test import combine  # pylint: disable=wrong-import-order
 from test import QiskitTestCase  # pylint: disable=wrong-import-order
-from qiskit.quantum_info import StabilizerState, SparsePauliOp
 from qiskit.exceptions import QiskitError
-from qiskit.quantum_info.random import random_clifford
 
 
 logger = logging.getLogger(__name__)
