@@ -19,7 +19,6 @@ from qiskit.providers.fake_provider import GenericBackendV2
 from qiskit.transpiler.exceptions import TranspilerError
 from qiskit.transpiler.instruction_durations import InstructionDurations
 from test import QiskitTestCase  # pylint: disable=wrong-import-order
-import unittest
 
 
 class TestInstructionDurationsClass(QiskitTestCase):
